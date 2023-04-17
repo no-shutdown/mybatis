@@ -25,6 +25,8 @@
 
 	<!-- 所有数据库语句映射表文件必须在这里注册 -->
 	<mappers>
-		<mapper class="main.mapper.UserMapper"/>
+		<mapper resource="main/mapper/UserMapper.xml"/>
+
+<!--		<mapper class="main.mapper.UserMapper"/>-->
 	</mappers>
 </configuration>

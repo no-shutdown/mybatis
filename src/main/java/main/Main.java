@@ -24,5 +24,8 @@ public class Main {
         SqlSessionFactory build = builder.build(input);
         UserMapper mapper = build.openSession().getMapper(UserMapper.class);
         System.out.println(mapper.xmlSelect());
+
+        UserMapper mapper1 = build.openSession().getMapper(UserMapper.class);
+        System.out.println(mapper1.annotationSelect());
     }
 }
