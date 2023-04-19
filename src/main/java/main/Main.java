@@ -2,6 +2,7 @@ package main;
 
 import main.mapper.UserMapper;
 import org.apache.ibatis.io.Resources;
+import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 
@@ -21,11 +22,11 @@ public class Main {
             System.out.println(e.getMessage() + "mybatis-config.xml 文件异常");
         }
         SqlSessionFactoryBuilder builder = new SqlSessionFactoryBuilder();
-        SqlSessionFactory build = builder.build(input);
-        UserMapper mapper = build.openSession().getMapper(UserMapper.class);
-        System.out.println(mapper.xmlSelect());
+        SqlSessionFactory sqlSessionFactory = builder.build(input);
+        SqlSession sqlSession = sqlSessionFactory.openSession();
 
-        UserMapper mapper1 = build.openSession().getMapper(UserMapper.class);
-        System.out.println(mapper1.annotationSelect());
+        UserMapper mapper = sqlSession.getMapper(UserMapper.class);
+        System.out.println(mapper.paramSelect("123","123").age);
+
     }
 }
