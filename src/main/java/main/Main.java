@@ -1,6 +1,7 @@
 package main;
 
 import main.mapper.UserMapper;
+import main.pojo.Demo;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -8,6 +9,7 @@ import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 
 /**
  * @author xinLin.huang
@@ -26,7 +28,16 @@ public class Main {
         SqlSession sqlSession = sqlSessionFactory.openSession();
 
         UserMapper mapper = sqlSession.getMapper(UserMapper.class);
-        System.out.println(mapper.paramSelect("123","123").age);
+
+//        Object demo = mapper.mergeResultSets();
+//        System.out.println();
+
+        Object refs = mapper.refResultSets();
+        System.out.println();
+
+//        Object users = mapper.commonAssociationRef();
+//        System.out.println();
+
 
     }
 }

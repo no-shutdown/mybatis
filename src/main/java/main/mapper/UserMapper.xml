@@ -3,8 +3,35 @@
 
 <mapper namespace="main.mapper.UserMapper">
 
-
-    <select id="xmlSelect" resultType="string">
-        select 'xml';
+    <select id="mergeResultSets" resultSets="sqlResult1,sqlResult2" resultMap="multMap">
+        select name from user;
+        select 'abc';
     </select>
+    <resultMap id="multMap" type="main.pojo.Demo">
+        <result property="field1" column="name"/>
+        <association property="field2" javaType="string" resultSet="sqlResult2"/>
+    </resultMap>
+
+
+    <select id="refResultSets" resultSets="sql1,sql2" resultMap="resultSetsMap">
+        select * from user;
+        select * from sub;
+    </select>
+    <resultMap id="resultSetsMap" type="main.pojo.User">
+        <collection property="sub" ofType="main.pojo.Sub"
+                     resultSet="sql2" column="id" foreignColumn="userId"/>
+    </resultMap>
+
+
+    <select id="commonAssociationRef" resultMap="userMap">
+        select * from user;
+    </select>
+    <resultMap id="userMap" type="main.pojo.User">
+        <association property="sub" javaType="main.pojo.Sub"
+                     select="refSelect"  column="id" foreignColumn="userId" />
+    </resultMap>
+    <select id="refSelect" parameterType="int" resultType="main.pojo.Sub">
+        select * from sub where userId=#{id}
+    </select>
+
 </mapper>
