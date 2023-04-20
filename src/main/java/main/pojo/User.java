@@ -1,5 +1,7 @@
 package main.pojo;
 
+import java.util.List;
+
 /**
  * @author xinLin.huang
  * @date 2023/4/19 18:08
@@ -9,5 +11,5 @@ public class User {
     public String name;
     public Integer age;
 
-    public Sub sub;
+    public List<Sub> sub;
 }
