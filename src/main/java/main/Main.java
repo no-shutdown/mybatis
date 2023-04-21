@@ -2,6 +2,7 @@ package main;
 
 import main.mapper.UserMapper;
 import main.pojo.Demo;
+import main.pojo.User;
 import org.apache.ibatis.io.Resources;
 import org.apache.ibatis.session.SqlSession;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -29,14 +30,8 @@ public class Main {
 
         UserMapper mapper = sqlSession.getMapper(UserMapper.class);
 
-//        Object demo = mapper.mergeResultSets();
-//        System.out.println();
-
-        Object refs = mapper.refResultSets();
+        List<User> user = mapper.refResultSets();
         System.out.println();
-
-//        Object users = mapper.commonAssociationRef();
-//        System.out.println();
 
 
     }

@@ -3,6 +3,21 @@
 
 <mapper namespace="main.mapper.UserMapper">
 
+
+
+    <resultMap id="userResultMap" type="main.pojo.User">
+        <id property="id" column="id"/>
+        <result property="name" column="name"/>
+        <result property="age" column="age"/>
+    </resultMap>
+    <select id="commonMapSelect" resultMap="userResultMap" >
+        select * from user where id=123;
+    </select>
+
+    <select id="commonTypeSelect" resultType="main.pojo.User" >
+        select * from user where id=123;
+    </select>
+
     <select id="mergeResultSets" resultSets="sqlResult1,sqlResult2" resultMap="multMap">
         select name from user;
         select 'abc';
@@ -27,8 +42,7 @@
         select * from user;
     </select>
     <resultMap id="userMap" type="main.pojo.User">
-        <association property="sub" javaType="main.pojo.Sub"
-                     select="refSelect"  column="id" foreignColumn="userId" />
+        <collection property="sub" ofType="main.pojo.Sub" select="refSelect"  column="id" foreignColumn="userId" />
     </resultMap>
     <select id="refSelect" parameterType="int" resultType="main.pojo.Sub">
         select * from sub where userId=#{id}

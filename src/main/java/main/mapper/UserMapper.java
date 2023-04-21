@@ -14,8 +14,10 @@ import java.util.List;
  * @date 2023/4/12 14:48
  */
 public interface UserMapper {
+    User commonMapSelect();
+    User commonTypeSelect();
     List<Demo> mergeResultSets();
-    List<Demo> refResultSets();
+    List<User> refResultSets();
     List<User> commonAssociationRef();
 
 
