@@ -24,12 +24,12 @@ public class Main {
         } catch (IOException e) {
             System.out.println(e.getMessage() + "mybatis-config.xml 文件异常");
         }
-        SqlSessionFactoryBuilder builder = new SqlSessionFactoryBuilder();
-        SqlSessionFactory sqlSessionFactory = builder.build(input);
+
+        SqlSessionFactoryBuilder sqlSessionFactoryBuilder = new SqlSessionFactoryBuilder();
+        SqlSessionFactory sqlSessionFactory = sqlSessionFactoryBuilder.build(input);
         SqlSession sqlSession = sqlSessionFactory.openSession();
 
         UserMapper mapper = sqlSession.getMapper(UserMapper.class);
-
         List<User> user = mapper.refResultSets();
         System.out.println();
 

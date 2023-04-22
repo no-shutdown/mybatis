@@ -118,7 +118,9 @@ public class MapperAnnotationBuilder {
   public void parse() {
     String resource = type.toString();
     if (!configuration.isResourceLoaded(resource)) {
+      //调用了 XMLMapperBuilder 加载对应的xml配置
       loadXmlResource();
+      //记录已加载的资源
       configuration.addLoadedResource(resource);
       assistant.setCurrentNamespace(type.getName());
       parseCache();
@@ -128,13 +130,16 @@ public class MapperAnnotationBuilder {
         try {
           // issue #237
           if (!method.isBridge()) {
+            //解析MappedStatement
             parseStatement(method);
           }
         } catch (IncompleteElementException e) {
+          //未完成映射的方法保存下来
           configuration.addIncompleteMethod(new MethodResolver(this, method));
         }
       }
     }
+    //再试一遍未完成映射的方法
     parsePendingMethods();
   }
 

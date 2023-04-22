@@ -105,7 +105,7 @@ public class XMLMapperBuilder extends BaseBuilder {
       bindMapperForNamespace();
     }
 
-    //还有没解析完的东东这里接着解析？  
+    //还有没解析完的这里接着解析
     parsePendingResultMaps();
     parsePendingChacheRefs();
     parsePendingStatements();
