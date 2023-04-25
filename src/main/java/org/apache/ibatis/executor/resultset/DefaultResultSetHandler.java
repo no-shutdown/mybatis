@@ -158,10 +158,11 @@ public class DefaultResultSetHandler implements ResultSetHandler {
     final List<Object> multipleResults = new ArrayList<Object>();
 
     int resultSetCount = 0;
+    //获取第一个结果集（一般也只有一个结果集）
     ResultSetWrapper rsw = getFirstResultSet(stmt);
 
+    //resultMaps
     List<ResultMap> resultMaps = mappedStatement.getResultMaps();
-    //一般resultMaps里只有一个元素
     int resultMapCount = resultMaps.size();
     validateResultMapsCount(rsw, resultMapCount);
     while (rsw != null && resultMapCount > resultSetCount) {
@@ -172,6 +173,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
       resultSetCount++;
     }
 
+    //resultSets
     String[] resultSets = mappedStatement.getResulSets();
     if (resultSets != null) {
       while (rsw != null && resultSetCount < resultSets.length) {
@@ -250,6 +252,7 @@ public class DefaultResultSetHandler implements ResultSetHandler {
   private void handleResultSet(ResultSetWrapper rsw, ResultMap resultMap, List<Object> multipleResults, ResultMapping parentMapping) throws SQLException {
     try {
       if (parentMapping != null) {
+        //有父级映射的情况（如association标签的关联）
         handleRowValues(rsw, resultMap, null, RowBounds.DEFAULT, parentMapping);
       } else {
         if (resultHandler == null) {
@@ -283,10 +286,12 @@ public class DefaultResultSetHandler implements ResultSetHandler {
 
   private void handleRowValues(ResultSetWrapper rsw, ResultMap resultMap, ResultHandler resultHandler, RowBounds rowBounds, ResultMapping parentMapping) throws SQLException {
     if (resultMap.hasNestedResultMaps()) {
+      //嵌套查询（如：association标签这种外键关联的查询）
       ensureNoRowBounds();
       checkResultHandler();
       handleRowValuesForNestedResultMap(rsw, resultMap, resultHandler, rowBounds, parentMapping);
     } else {
+      //一般情况
       handleRowValuesForSimpleResultMap(rsw, resultMap, resultHandler, rowBounds, parentMapping);
     }
   }  
@@ -312,15 +317,19 @@ public class DefaultResultSetHandler implements ResultSetHandler {
     skipRows(rsw.getResultSet(), rowBounds);
     while (shouldProcessMoreRows(resultContext, rowBounds) && rsw.getResultSet().next()) {
       ResultMap discriminatedResultMap = resolveDiscriminatedResultMap(rsw.getResultSet(), resultMap, null);
+      //根据resultMap反射得到一个POJO结果
       Object rowValue = getRowValue(rsw, discriminatedResultMap);
+      //POJO结果交给resultHandler
       storeObject(resultHandler, resultContext, rowValue, parentMapping, rsw.getResultSet());
     }
   }
 
   private void storeObject(ResultHandler resultHandler, DefaultResultContext resultContext, Object rowValue, ResultMapping parentMapping, ResultSet rs) throws SQLException {
     if (parentMapping != null) {
+      //把查询结果赋值给父级映射（如association情况）
       linkToParents(rs, parentMapping, rowValue);
     } else {
+      //一般情况
       callResultHandler(resultHandler, resultContext, rowValue);
     }
   }
@@ -361,10 +370,10 @@ public class DefaultResultSetHandler implements ResultSetHandler {
       final MetaObject metaObject = configuration.newMetaObject(resultObject);
       boolean foundValues = !resultMap.getConstructorResultMappings().isEmpty();
       if (shouldApplyAutomaticMappings(resultMap, false)) {        
-        //自动映射咯
-        //这里把每个列的值都赋到相应的字段里去了
+        //自动映射（这里把每个列的值都赋到相应的字段里去了——unmappedColumnNames）
     	foundValues = applyAutomaticMappings(rsw, resultMap, metaObject, null) || foundValues;
       }
+      //把指定的参数值赋进去（resultMap标签中result指定的property——mappedColumnNames）
       foundValues = applyPropertyMappings(rsw, resultMap, metaObject, lazyLoader, null) || foundValues;
       foundValues = lazyLoader.size() > 0 || foundValues;
       resultObject = foundValues ? resultObject : null;
